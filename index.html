@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDoList</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      background-color: #f5f5f5
+    }
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 60px;
+      margin-top: 30px;
+      color: orange;
+    }
+    .list-wrapper {
+      width: 300px;
+      margin: 0 auto;
+      border: 1px solid #666;
+      box-shadow: 0px 0px 15px #999;
+      background-color: #fff;
+    }
+    .list-wrapper input {
+      width: 100%;
+      padding: 0 10px 0 20px;
+      box-sizing: border-box;
+      line-height: 30px;
+      border: none;
+    }
+    .list-wrapper #todo-list .todo-item {
+      border-top: 1px solid #666;
+      padding: 0 10px 0 20px;
+    }
+    .list-wrapper #todo-list .todo-item .todo-text {
+      font-size: 15px;
+      height: 30px;
+      line-height: 30px;
+    }
+    .list-wrapper #todo-list .todo-item .todo-delet {
+      float: right;
+      line-height: 30px;
+      /*vertical-align: middle;*/
+    }
+  </style>
+  <script type="text/javascript">
+    window.onload = function () {
+      var input = document.getElementsByTagName('input')[0]
+      var todoList = document.getElementById('todo-list')
+      var todoItems = document.getElementsByClassName('todo-item')
+
+      input.onkeyup = function (event) {
+        // alert(event.keyCode)
+        if (event.keyCode === 13) {
+          let todoItem = document.createElement('div')
+          todoItem.className = "todo-item"
+          todoList.appendChild(todoItem)
+          let text = document.createElement('span')
+          let delet = document.createElement('span')
+          todoItem.appendChild(text)
+          todoItem.appendChild(delet)
+          //使用innerHTML插入文字
+          text.innerHTML = input.value
+          delet.innerHTML = "x"
+          text.className = "todo-text"
+          delet.className = "todo-delet"
+
+          //清空输入栏
+          input.value = ''
+
+          //监听点击事件删除item
+          delet.onclick = function () {
+            todoList.removeChild(this.parentNode)
+          }
+        }
+      }
+      // 模糊匹配
+      function match () {
+        input.addEventListener('keyup', function() {
+          let str = this.value
+          let reg = new RegExp('(' + str + ')', 'g')
+          // console.log(todos)
+          for(let i = 0; i < todoItems.length; i++) {
+            let todo = todoItems[i].getElementsByClassName('todo-text')[0]
+            let newStr = todo.innerText.replace(reg, "<font color='red'>$1</font>") //$1表示第一个匹配的捕获组
+            if (todo.innerText.indexOf(str) === -1) {
+              todoItems[i].style.display = 'none'
+            } else {
+              todo.innerHTML = newStr
+            }
+            if (str == '') {
+              todoItems[i].style.display = 'block'
+            }
+          } 
+        })
+      }
+      match()
+    }
+  </script>
+</head>
+<body>
+  <div class="title">todos</div>
+  <div class="list-wrapper">
+    <input type="text">
+    <div id="todo-list">
+    </div>
+  </div>
+</body>
+</html>
